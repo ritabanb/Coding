@@ -8,9 +8,11 @@ public class UniqueString {
         int len = str.length();
         Set<Character> strSet = new HashSet<>();
         for (char ch :  str.toCharArray()) {
+            if (strSet.contains(ch))
+                return false;
             strSet.add(ch);
         }
-        return len == strSet.size();
+        return true;
     }
 
     private boolean isUniqueWithoutDataStructure(String str) {
