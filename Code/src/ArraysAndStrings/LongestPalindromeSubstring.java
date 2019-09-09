@@ -1,0 +1,68 @@
+package ArraysAndStrings;
+
+public class LongestPalindromeSubstring {
+    public String longestPalindrome(String s) {
+        int len = s.length();
+        if (len == 0)
+            return "";
+        String longestPalindrome = "" + s.charAt(0);
+        for (int i = 1; i < len; i++) {
+            int left = i - 1, right = i + 1;
+            String palindrome = "" + s.charAt(i);
+            boolean same = true;
+            while (left >= 0 || right < len) {
+                if (left >= 0 && right < len && s.charAt(left) == s.charAt(right)) {
+                    if (s.charAt(i) != s.charAt(left))
+                        same = false;
+                    palindrome = s.charAt(left) + palindrome + s.charAt(right);
+                    left--;
+                    right++;
+                }
+                else if (left >=0 && same && s.charAt(i) == s.charAt(left)) {
+                    palindrome = s.charAt(left) + palindrome;
+                    left--;
+                }
+                else if (right < len && same && s.charAt(i) == s.charAt(right)) {
+                    palindrome = palindrome + s.charAt(right);
+                    right++;
+                }
+                else
+                    break;
+            }
+            if (palindrome.length() >= longestPalindrome.length())
+                longestPalindrome = palindrome;
+        }
+        return longestPalindrome;
+    }
+
+
+    //Leetcode solution
+    public String longestPalindrome_leetcode(String s) {
+        if (s == null || s.length() < 1) return "";
+        int start = 0, end = 0;
+        for (int i = 0; i < s.length(); i++) {
+            int len1 = expandAroundCenter(s, i, i);
+            int len2 = expandAroundCenter(s, i, i + 1);
+            int len = Math.max(len1, len2);
+            if (len > end - start) {
+                start = i - (len - 1) / 2;
+                end = i + len / 2;
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+
+    private int expandAroundCenter(String s, int left, int right) {
+        int L = left, R = right;
+        while (L >= 0 && R < s.length() && s.charAt(L) == s.charAt(R)) {
+            L--;
+            R++;
+        }
+        return R - L - 1;
+    }
+
+    public static void main(String[] args) {
+        LongestPalindromeSubstring obj = new LongestPalindromeSubstring();
+        System.out.println(obj.longestPalindrome_leetcode("babad"));
+    }
+}
